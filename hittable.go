@@ -21,7 +21,7 @@ func (ctx *hitContext) Valid(t float32) bool {
 }
 
 type hittable interface {
-	hit(ctx *hitContext, r ray) bool // the point along the ray that hits the object. < 0 means no hit
+	hit(ctx *hitContext, r ray) bool
 }
 
 type hittables []hittable
