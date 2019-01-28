@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"math/rand"
 )
 
 type vec3 struct {
@@ -11,6 +12,10 @@ type vec3 struct {
 
 func newVec3(x, y, z float32) vec3 {
 	return vec3{x, y, z}
+}
+
+func randomVec3() vec3 {
+	return newVec3(rand.Float32(), rand.Float32(), rand.Float32())
 }
 
 func (v vec3) Length() float32 {

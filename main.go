@@ -4,15 +4,27 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"math"
 	"math/rand"
 	"os"
 )
 
 const (
-	width   = 1000
-	height  = 500
-	samples = 32
+	width   = 1200
+	height  = 600
+	samples = 16
 )
+
+func colour(ctx *hitContext, world hittables, r ray) vec3 {
+	if world.hit(ctx, r) {
+		target := ctx.P.Add(ctx.Normal).Add(randomPointInUnitSphere())
+		return colour(ctx, world, newRay(ctx.P, target.Subtract(ctx.P))).Multiply(0.5)
+	}
+
+	unitDirection := r.direction().Unit()
+	t := 0.5 * (unitDirection.Y + 1)
+	return newVec3(1, 1, 1).Multiply(1 - t).Add(newVec3(0.5, 0.7, 1.0).Multiply(t))
+}
 
 func main() {
 	rect := image.Rect(width, height, 0, 0)
@@ -26,16 +38,6 @@ func main() {
 
 	cam := newCamera()
 
-	colour := func(r ray) vec3 {
-		if world.hit(ctx, r) {
-			return newVec3(ctx.Normal.X+1, ctx.Normal.Y+1, ctx.Normal.Z+1).Multiply(0.5)
-		}
-
-		unitDirection := r.direction().Unit()
-		t := 0.5 * (unitDirection.Y + 1)
-		return newVec3(1, 1, 1).Multiply(1 - t).Add(newVec3(0.5, 0.7, 1.0).Multiply(t))
-	}
-
 	for y := height - 1; y >= 0; y-- {
 		for x := 0; x < width; x++ {
 			col := newVec3(0, 0, 0)
@@ -44,10 +46,14 @@ func main() {
 				u := (float32(x) + rand.Float32()) / float32(width)
 				v := (float32(y) + rand.Float32()) / float32(height)
 				r := cam.ray(u, v)
-				col = col.Add(colour(r))
+				col = col.Add(colour(ctx, world, r))
 			}
 
 			col = col.DivideFloat(float32(samples))
+			col = newVec3(
+				float32(math.Sqrt(float64(col.X))),
+				float32(math.Sqrt(float64(col.Y))),
+				float32(math.Sqrt(float64(col.Z))))
 
 			img.Set(x, height-y, color.RGBA{
 				R: uint8(255.99 * col.X),

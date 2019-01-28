@@ -11,6 +11,7 @@ type hitContext struct {
 
 func newHitContext() *hitContext {
 	return &hitContext{
+		TMin: 0.001,
 		TMax: math.MaxFloat32,
 	}
 }

@@ -13,6 +13,14 @@ func newSphere(centre vec3, radius float32) sphere {
 	return sphere{centre, radius}
 }
 
+func randomPointInUnitSphere() vec3 {
+	for {
+		if p := randomVec3().Multiply(2).Subtract(newVec3(1, 1, 1)); p.Length()*p.Length() >= 1 {
+			return p
+		}
+	}
+}
+
 func (s sphere) hit(ctx *hitContext, r ray) bool {
 	oc := r.origin().Subtract(s.Centre)
 	a := r.direction().Dot(r.direction())
