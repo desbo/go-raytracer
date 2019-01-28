@@ -7,7 +7,7 @@ type camera struct {
 func newCamera() camera {
 	return camera{
 		newVec3(0, 0, 0),
-		newVec3(-2, -1, 1),
+		newVec3(-2, -1, -1),
 		newVec3(4, 0, 0),
 		newVec3(0, 2, 0),
 	}

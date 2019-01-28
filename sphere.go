@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type sphere struct {
 	Centre vec3
 	Radius float32
@@ -14,6 +16,11 @@ func (s sphere) hit(r ray) float32 {
 	a := r.direction().Dot(r.direction())
 	b := 2 * oc.Dot(r.direction())
 	c := oc.Dot(oc) - s.Radius*s.Radius
+	disc := b*b - 4*a*c
 
-	return (b*b - 4*a*c)
+	if disc < 0 {
+		return -1.0
+	}
+
+	return (-b - float32(math.Sqrt(float64(disc)))) / (2.0 * a)
 }

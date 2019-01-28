@@ -26,11 +26,9 @@ func main() {
 
 	colour := func(r ray) vec3 {
 		t := world.hit(r)
-
 		if t > 0 {
-			return newVec3(1, 0, 0)
-			// N := r.pointAt(t).Subtract(newVec3(0, 0, -1)).Unit()
-			// return newVec3(N.X+1, N.Y+1, N.Z+1).Multiply(0.5)
+			N := r.pointAt(t).Subtract(newVec3(0, 0, -1)).Unit()
+			return newVec3(N.X+1, N.Y+1, N.Z+1).Multiply(0.5)
 		}
 
 		unitDirection := r.direction().Unit()
