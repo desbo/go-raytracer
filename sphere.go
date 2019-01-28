@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 type sphere struct {
 	Centre vec3
@@ -11,16 +13,23 @@ func newSphere(centre vec3, radius float32) sphere {
 	return sphere{centre, radius}
 }
 
-func (s sphere) hit(r ray) float32 {
+func (s sphere) hit(ctx *hitContext, r ray) bool {
 	oc := r.origin().Subtract(s.Centre)
 	a := r.direction().Dot(r.direction())
 	b := 2 * oc.Dot(r.direction())
 	c := oc.Dot(oc) - s.Radius*s.Radius
 	disc := b*b - 4*a*c
 
-	if disc < 0 {
-		return -1.0
+	if disc > 0 {
+		t := (-b - float32(math.Sqrt(float64(disc)))) / (2.0 * a)
+
+		if ctx.Valid(t) {
+			ctx.T = t
+			ctx.P = r.pointAt(t)
+			ctx.Normal = (ctx.P.Subtract(s.Centre)).DivideFloat(s.Radius)
+			return true
+		}
 	}
 
-	return (-b - float32(math.Sqrt(float64(disc)))) / (2.0 * a)
+	return false
 }
