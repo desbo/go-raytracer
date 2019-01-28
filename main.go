@@ -17,12 +17,10 @@ func main() {
 	rect := image.Rect(width, height, 0, 0)
 	img := image.NewRGBA(rect)
 
-	world := newSphere(newVec3(0, 0, -1), 0.5)
-
-	// world := hittables{
-	// 	newSphere(newVec3(0, 0, -1), 0.5),
-	// 	newSphere(newVec3(0, -100.5, -1), 100),
-	// }
+	world := hittables{
+		newSphere(newVec3(0, 0, -1), 0.5),
+		// newSphere(newVec3(0, -100.5, -1), 100),
+	}
 
 	cam := newCamera()
 
@@ -30,8 +28,9 @@ func main() {
 		t := world.hit(r)
 
 		if t > 0 {
-			N := r.pointAt(t).Subtract(newVec3(0, 0, -1)).Unit()
-			return newVec3(N.X+1, N.Y+1, N.Z+1).Multiply(0.5)
+			return newVec3(1, 0, 0)
+			// N := r.pointAt(t).Subtract(newVec3(0, 0, -1)).Unit()
+			// return newVec3(N.X+1, N.Y+1, N.Z+1).Multiply(0.5)
 		}
 
 		unitDirection := r.direction().Unit()
